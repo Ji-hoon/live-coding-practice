@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const baseURL = "https://dummyjson.com/users/add";
 
@@ -8,16 +9,18 @@ type userType = {
   email: string;
   password: string;
 };
+
+type FormValues = Omit<userType, "id">;
+
 export default function SignUp() {
   const [id, setId] = useState(101);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
   const [users, setUsets] = useState<userType[]>([]);
+  const { register, handleSubmit, setValue } = useForm<FormValues>();
 
-  function submitHandler(e: React.FormEvent) {
-    e.preventDefault();
-
-    if (email === "" || password === "") {
+  function onSubmit(data: FormValues) {
+    if (data.email === "" || data.password === "") {
       alert("모든 필드를 입력해주세요.");
       return;
     }
@@ -29,15 +32,18 @@ export default function SignUp() {
         // headers: { "Content-Type": "application/json" },
         //body: {
         id,
-        email,
-        password,
+        email: data.email,
+        password: data.password,
         //},
       })
       .then((res) => {
         console.log(res.data);
         setUsets([...users, res.data]);
-        setEmail("");
-        setPassword("");
+        setValue("email", "", {
+          shouldDirty: true,
+        });
+        // setEmail("");
+        // setPassword("");
         setId(id + 1);
       })
       .catch((error) => alert(error));
@@ -47,22 +53,12 @@ export default function SignUp() {
 
   return (
     <>
-      <form onSubmit={submitHandler}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input {...register("email")} placeholder="type email..." type="text" />
         <input
-          placeholder="type email..."
-          type="text"
-          value={email}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setEmail(e.target.value)
-          }
-        />
-        <input
+          {...register("password")}
           type="password"
           placeholder="type password..."
-          value={password}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setPassword(e.target.value)
-          }
         />
         <button>회원가입</button>
       </form>
