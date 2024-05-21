@@ -42,6 +42,9 @@ export default function SignUp() {
         setValue("email", "", {
           shouldDirty: true,
         });
+        setValue("password", "", {
+          shouldDirty: true,
+        });
         // setEmail("");
         // setPassword("");
         setId(id + 1);
