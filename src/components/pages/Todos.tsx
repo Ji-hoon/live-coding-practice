@@ -1,6 +1,7 @@
 import { useLayoutEffect, useMemo, useState } from "react";
 import { useIntersectionObserver } from "../../useIntersectionObserver";
 import Todo from "../atoms/Todo";
+import axios from "axios";
 
 const baseURL = (cursor: number, limit: number) => {
   return `https://dummyjson.com/todos?skip=${cursor}&limit=${limit}`;
@@ -26,7 +27,7 @@ export default function Todos() {
   console.log(page);
 
   function getNextPage() {
-    if (page < MAX_COUNT) {
+    if (page < MAX_COUNT && todos.length >= LIMIT) {
       setPage(page + LIMIT);
     }
     if (page >= MAX_COUNT) setPage(MAX_COUNT);
@@ -37,10 +38,10 @@ export default function Todos() {
   }, [page]);
 
   useLayoutEffect(() => {
-    fetch(baseURL(page, LIMIT), {})
-      .then((res) => res.json())
-      .then((json) => {
-        const todos = [...prevTodos, ...json.todos];
+    axios
+      .get(baseURL(page, LIMIT), {})
+      .then((res) => {
+        const todos = [...prevTodos, ...res.data.todos];
         setTodos(todos);
       })
       .catch((error) => {
@@ -51,7 +52,7 @@ export default function Todos() {
 
   return (
     <>
-      <div style={{ minHeight: "100vh" }}>
+      <div style={{ minHeight: "10vh" }}>
         {todos &&
           todos.map((todo, index) => {
             return <Todo todo={todo} key={index} />;

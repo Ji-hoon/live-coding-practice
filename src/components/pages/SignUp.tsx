@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 
 const baseURL = "https://dummyjson.com/users/add";
@@ -22,19 +23,19 @@ export default function SignUp() {
     }
 
     // console.log({ email, password });
-    fetch(baseURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    axios
+      .post(baseURL, {
+        // method: "POST",
+        // headers: { "Content-Type": "application/json" },
+        //body: {
         id,
         email,
         password,
-      }),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
-        setUsets([...users, json]);
+        //},
+      })
+      .then((res) => {
+        console.log(res.data);
+        setUsets([...users, res.data]);
         setEmail("");
         setPassword("");
         setId(id + 1);
