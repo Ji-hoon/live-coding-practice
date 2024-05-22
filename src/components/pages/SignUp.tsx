@@ -80,7 +80,7 @@ export default function SignUp() {
           type="password"
           placeholder="type password..."
         />
-        <button>회원가입</button>
+        <button className="text-2xl bg-sky-500">회원가입</button>
       </form>
       <h3>Users</h3>
       <ul>
