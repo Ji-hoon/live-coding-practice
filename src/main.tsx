@@ -8,6 +8,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Todos from "./components/pages/Todos.tsx";
 import SignUp from "./components/pages/SignUp.tsx";
 import App from "./App.tsx";
+import Meeting from "./components/pages/Meeting.tsx";
 
 const router = createBrowserRouter([
   {
@@ -22,7 +23,15 @@ const router = createBrowserRouter([
         path: "/signup",
         element: <SignUp />,
       },
+      {
+        path: "/meeting",
+        element: <Meeting />,
+      },
     ],
+  },
+  {
+    path: "*",
+    element: <>NOT FOUND</>,
   },
 ]);
 
