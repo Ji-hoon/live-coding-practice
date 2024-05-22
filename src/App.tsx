@@ -1,10 +1,13 @@
-// import SignUp from "./components/pages/SignUp";
-import Todos from "./components/pages/Todos";
+import { NavLink, Outlet } from "react-router-dom";
 
 function App() {
   return (
     <>
-      <Todos />
+      <div style={{ display: "flex", gap: "1em" }}>
+        <NavLink to="/todos">todos</NavLink>
+        <NavLink to="/signup">signup</NavLink>
+      </div>
+      <Outlet />
     </>
   );
 }
