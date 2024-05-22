@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { UserStateType } from "../../store/index";
 import { userActions } from "../../store/index";
+import { createPortal } from "react-dom";
+import { useState } from "react";
 
 const baseURL = "https://dummyjson.com/users/add";
 
@@ -27,11 +29,12 @@ export default function SignUp() {
 
   // const [users, setUsers] = useState<userType[]>([]);
   console.log(id, users);
+  const [error, setError] = useState("");
   const { register, handleSubmit, setValue } = useForm<FormValues>();
 
   function onSubmit(data: FormValues) {
     if (data.email === "" || data.password === "") {
-      alert("모든 필드를 입력해주세요.");
+      setError("모든 필드를 입력해주세요.");
       return;
     }
 
@@ -93,6 +96,27 @@ export default function SignUp() {
           <li>no users</li>
         )}
       </ul>
+      {error &&
+        createPortal(
+          <div
+            style={{
+              position: "absolute",
+              left: "0px",
+              right: "0px",
+              bottom: "0px",
+              top: "0px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(255,255,255,0.8)",
+            }}
+          >
+            <p>{error}</p>
+            <button onClick={() => setError("")}>닫기</button>
+          </div>,
+          document.getElementById("dialog") || document.body
+        )}
     </>
   );
 }
