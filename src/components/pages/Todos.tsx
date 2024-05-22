@@ -1,7 +1,9 @@
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import { useIntersectionObserver } from "../../useIntersectionObserver";
 import Todo from "../atoms/Todo";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { pageState, todoState } from "../../atoms/Todo.atoms";
 
 const baseURL = (cursor: number, limit: number) => {
   return `https://dummyjson.com/todos?skip=${cursor}&limit=${limit}`;
@@ -17,8 +19,11 @@ export type todoType = {
 };
 
 export default function Todos() {
-  const [page, setPage] = useState(0);
-  const [todos, setTodos] = useState<todoType[]>([]);
+  const [page, setPage] = useRecoilState(pageState);
+  const [todos, setTodos] = useRecoilState(todoState);
+
+  // const [page, setPage] = useState(0);
+  // const [todos, setTodos] = useState<todoType[]>([]);
   const { targetRef } = useIntersectionObserver({
     todos: todos,
     onIntersect: getNextPage,
