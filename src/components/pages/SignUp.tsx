@@ -1,10 +1,13 @@
 import axios from "axios";
-import { useState } from "react";
+// import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { UserStateType } from "../../store/index";
+import { userActions } from "../../store/index";
 
 const baseURL = "https://dummyjson.com/users/add";
 
-type userType = {
+export type userType = {
   id: number;
   email: string;
   password: string;
@@ -13,10 +16,17 @@ type userType = {
 type FormValues = Omit<userType, "id">;
 
 export default function SignUp() {
-  const [id, setId] = useState(101);
+  const { id, users } = useSelector(
+    (state: { user: UserStateType }) => state.user
+  );
+  const dispatch = useDispatch();
+
+  // const [id, setId] = useState(101);
   // const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
-  const [users, setUsets] = useState<userType[]>([]);
+
+  // const [users, setUsers] = useState<userType[]>([]);
+  console.log(id, users);
   const { register, handleSubmit, setValue } = useForm<FormValues>();
 
   function onSubmit(data: FormValues) {
@@ -38,16 +48,20 @@ export default function SignUp() {
       })
       .then((res) => {
         console.log(res.data);
-        setUsets([...users, res.data]);
+        //setUsers([...users, res.data]);
         setValue("email", "", {
           shouldDirty: true,
         });
         setValue("password", "", {
           shouldDirty: true,
         });
+
+        dispatch(userActions.incrementId());
+        dispatch(userActions.setUsers(res.data));
+
         // setEmail("");
         // setPassword("");
-        setId(id + 1);
+        //setId(id + 1);
       })
       .catch((error) => alert(error));
   }
@@ -68,7 +82,7 @@ export default function SignUp() {
       <h3>Users</h3>
       <ul>
         {users.length > 0 ? (
-          users.reverse().map((user: userType, index) => {
+          users.map((user: userType, index) => {
             return (
               <li key={index}>
                 {user.id} | {user.email} | {user.password}
